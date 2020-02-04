@@ -704,11 +704,12 @@ func (s *SocketIoServer) onSubscribe(c *gosocketio.Channel, req []byte) interfac
 		}
 	} else {
 		sc = r[1 : len(r)-1]
-		if sc != "bitcoind/hashblock" {
-			onError(c.Id(), sc, "invalid data", "expecting bitcoind/hashblock, req: "+r)
+        if (sc == "bitcoind/hashblock") || (sc == "bitcoind/tx") {
+		    c.Join(sc)
+        } else {
+			onError(c.Id(), sc, "invalid data", "expecting bitcoind/hashblock or bitcoind/tx, req: "+r)
 			return nil
 		}
-		c.Join(sc)
 	}
 	s.metrics.SocketIOSubscribes.With(common.Labels{"channel": sc, "status": "success"}).Inc()
 	return nil
@@ -732,4 +733,14 @@ func (s *SocketIoServer) OnNewTxAddr(txid string, desc bchain.AddressDescriptor)
 			glog.Info("broadcasting new txid ", txid, " for addr ", addr[0], " to ", c, " channels")
 		}
 	}
+}
+
+func (s *SocketIoServer) OnNewTx(tx *bchain.Tx) {
+	atx, err := s.api.GetTransactionFromBchainTx(tx, 0, false, false)
+	if err != nil {
+		glog.Error("GetTransactionFromBchainTx error ", err, " for ", tx.Txid)
+		return
+	}
+	c := s.server.BroadcastTo("bitcoind/tx", "bitcoind/tx", atx)
+	glog.Info("broadcasting new tx ", tx.Txid, " to ", c, " channels")
 }

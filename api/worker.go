@@ -848,6 +848,7 @@ func (w *Worker) getAddrDescUtxo(addrDesc bchain.AddressDescriptor, ba *db.AddrB
 									Vout:      int32(i),
 									AmountSat: (*Amount)(&vout.ValueSat),
 									Locktime:  bchainTx.LockTime,
+                                    ScriptPubKey: vout.ScriptPubKey.Hex,
 								})
 							}
 						}
@@ -888,6 +889,7 @@ func (w *Worker) getAddrDescUtxo(addrDesc bchain.AddressDescriptor, ba *db.AddrB
 						AmountSat:     (*Amount)(&utxo.ValueSat),
 						Height:        int(utxo.Height),
 						Confirmations: bestheight - int(utxo.Height) + 1,
+						// TODO: add ScriptPubKey:  tx.Vout[o.Vout].Hex,
 					})
 				}
 				checksum.Sub(&checksum, &utxo.ValueSat)

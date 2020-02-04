@@ -215,6 +215,18 @@
             });
         }
 
+        function subscribeTx() {
+            socket.emit('subscribe', "bitcoind/tx", function (result) {
+                console.log('subscribe bitcoind/tx sent successfully');
+                console.log(result);
+            });
+            socket.on("bitcoind/tx", function (result) {
+                console.log('on bitcoind/tx');
+                console.log(result);
+                document.getElementById('subscribeTxResult').innerText += JSON.stringify(result).replace(/,/g, ", ") + "\n";
+            });
+        }
+
         function subscribeAddressTxid() {
             var addresses = document.getElementById('subscribeAddressTxidAddresses').value.split(",");
             addresses = addresses.map(s => s.trim());
@@ -384,6 +396,15 @@
         </div>
         <div class="row">
             <div class="col" id="subscribeHashBlockResult">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <input class="btn btn-secondary" type="button" value="subscribe hashblock" onclick="subscribeTx()">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col" id="subscribeTxResult">
             </div>
         </div>
         <div class="row">

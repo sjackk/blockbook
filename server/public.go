@@ -215,6 +215,11 @@ func (s *PublicServer) OnNewTxAddr(tx *bchain.Tx, desc bchain.AddressDescriptor)
 	s.websocket.OnNewTxAddr(tx, desc)
 }
 
+func (s *PublicServer) OnNewTx(tx *bchain.Tx) {
+	s.socketio.OnNewTx(tx)
+//	s.websocket.OnNewBlock(hash, height)
+}
+
 func (s *PublicServer) txRedirect(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, joinURL(s.explorerURL, r.URL.Path), 302)
 	s.metrics.ExplorerViews.With(common.Labels{"action": "tx-redirect"}).Inc()

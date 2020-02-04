@@ -202,6 +202,7 @@ type OnNewTxAddrFunc func(tx *Tx, desc AddressDescriptor)
 
 // AddrDescForOutpointFunc defines function that returns address descriptorfor given outpoint or nil if outpoint not found
 type AddrDescForOutpointFunc func(outpoint Outpoint) AddressDescriptor
+type OnNewTxFunc func(tx *Tx)
 
 // BlockChain defines common interface to block chain daemon
 type BlockChain interface {
@@ -288,7 +289,7 @@ type BlockChainParser interface {
 
 // Mempool defines common interface to mempool
 type Mempool interface {
-	Resync() (int, error)
+	Resync() (int, error) // ResyncMempool(onNewTxAddr OnNewTxAddrFunc, onNewTx OnNewTxFunc) (int, error)
 	GetTransactions(address string) ([]Outpoint, error)
 	GetAddrDescTransactions(addrDesc AddressDescriptor) ([]Outpoint, error)
 	GetAllEntries() MempoolTxidEntries
