@@ -12,7 +12,6 @@ type MempoolBitcoinType struct {
 	chanTxid            chan string
 	chanAddrIndex       chan txidio
 	AddrDescForOutpoint AddrDescForOutpointFunc
-	onNewTx         	OnNewTxFunc
 }
 
 // NewMempoolBitcoinType creates new mempool handler.
@@ -85,8 +84,8 @@ func (m *MempoolBitcoinType) getTxAddrs(txid string, chanInput chan Outpoint, ch
 	}
 	glog.V(2).Info("mempool: gettxaddrs ", txid, ", ", len(tx.Vin), " inputs")
 
-	if m.onNewTx != nil {
-		m.onNewTx(tx)
+	if m.OnNewTx != nil {
+		m.OnNewTx(tx)
 	}
 
 	io := make([]addrIndex, 0, len(tx.Vout)+len(tx.Vin))

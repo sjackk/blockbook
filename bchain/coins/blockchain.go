@@ -165,8 +165,9 @@ func (c *blockChainWithMetrics) CreateMempool(chain bchain.BlockChain) (bchain.M
 	return c.b.CreateMempool(chain)
 }
 
-func (c *blockChainWithMetrics) InitializeMempool(addrDescForOutpoint bchain.AddrDescForOutpointFunc, onNewTxAddr bchain.OnNewTxAddrFunc) error {
-	return c.b.InitializeMempool(addrDescForOutpoint, onNewTxAddr)
+func (c *blockChainWithMetrics) InitializeMempool(addrDescForOutpoint bchain.AddrDescForOutpointFunc,
+	 onNewTxAddr bchain.OnNewTxAddrFunc, оnNewTx bchain.OnNewTxFunc) error {
+	return c.b.InitializeMempool(addrDescForOutpoint, onNewTxAddr, оnNewTx)
 }
 
 func (c *blockChainWithMetrics) Shutdown(ctx context.Context) error {

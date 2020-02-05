@@ -217,7 +217,6 @@ func (s *PublicServer) OnNewTxAddr(tx *bchain.Tx, desc bchain.AddressDescriptor)
 
 func (s *PublicServer) OnNewTx(tx *bchain.Tx) {
 	s.socketio.OnNewTx(tx)
-//	s.websocket.OnNewBlock(hash, height)
 }
 
 func (s *PublicServer) txRedirect(w http.ResponseWriter, r *http.Request) {
@@ -971,7 +970,22 @@ func (s *PublicServer) apiAddress(r *http.Request, apiVersion int) (interface{},
 	var address *api.Address
 	var err error
 	s.metrics.ExplorerViews.With(common.Labels{"action": "api-address"}).Inc()
-	page, pageSize, details, filter, _, _ := s.getAddressQueryParams(r, api.AccountDetailsTxidHistory, txsInAPI)
+
+	extended := false
+	e := r.URL.Query().Get("txs")
+	if len(e) > 0 {
+		extended, err = strconv.ParseBool(e)
+		if err != nil {
+			return nil, api.NewAPIError("Parameter 'txs' cannot be converted to boolean", true)
+		}
+	}
+
+	var accountDetailsType = api.AccountDetailsTxidHistory
+	if (extended) {
+		accountDetailsType = api.AccountDetailsTxHistoryLight
+	}
+
+	page, pageSize, details, filter, _, _ := s.getAddressQueryParams(r, accountDetailsType, txsInAPI)
 	address, err = s.api.GetAddress(addressParam, page, pageSize, details, filter)
 	if err == nil && apiVersion == apiV1 {
 		return s.api.AddressToV1(address), nil
