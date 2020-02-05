@@ -296,7 +296,7 @@ func mainWithExitCode() int {
 		// start full public interface
 		callbacksOnNewBlock = append(callbacksOnNewBlock, publicServer.OnNewBlock)
 		callbacksOnNewTxAddr = append(callbacksOnNewTxAddr, publicServer.OnNewTxAddr)
-		callbacksOnNewTx = append(callbacksOnNewTx, publicServer.onNewTx)
+		callbacksOnNewTx = append(callbacksOnNewTx, publicServer.OnNewTx)
 		publicServer.ConnectFullPublicInterface()
 	}
 
