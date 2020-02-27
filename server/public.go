@@ -217,7 +217,6 @@ func (s *PublicServer) OnNewTxAddr(tx *bchain.Tx, desc bchain.AddressDescriptor)
 
 func (s *PublicServer) OnNewTx(tx *bchain.Tx) {
 	s.socketio.OnNewTx(tx)
-//	s.websocket.OnNewBlock(hash, height)
 }
 
 func (s *PublicServer) txRedirect(w http.ResponseWriter, r *http.Request) {
